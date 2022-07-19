@@ -21,12 +21,19 @@ func main() {
 	//
 	//dd(cpus)
 
-	memory, err := GetMemory()
+	_, err := GetMemory()
 	if err != nil {
 		panic(err)
 	}
 
-	dd(memory)
+	//dd(memory)
+
+	uptime, err := GetUptime()
+	if err != nil {
+		panic(err)
+	}
+
+	dd(uptime)
 }
 
 func dd(data interface{}) {

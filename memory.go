@@ -20,7 +20,7 @@ type Memory struct {
 func GetMemory() (*Memory, error) {
 	memInfo, err := linuxproc.ReadMemInfo("/proc/meminfo")
 	if err != nil {
-		return nil, fmt.Errorf("failed to stat memInfo data, received error: %s", err.Error())
+		return nil, fmt.Errorf("failed to stat meminfo data, received error: %s", err.Error())
 	}
 
 	used := memInfo.MemTotal - memInfo.MemFree

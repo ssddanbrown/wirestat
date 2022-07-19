@@ -2,8 +2,6 @@
 
 ## TODO
 
-- Memory
-- Uptime
 - Check & align units
 - Server & JSON response
 - HTTP Status Code response changes on errors
