@@ -12,10 +12,10 @@ type FileSystemMap map[string]*FileSystem
 
 type FileSystem struct {
 	name        string
-	capacity    uint64 // bytes?
-	used        uint64 // bytes?
+	capacity    uint64
+	used        uint64
 	usedPercent uint
-	available   uint64 // bytes?
+	available   uint64
 }
 
 func GetFileSystemMap() (FileSystemMap, error) {
@@ -38,7 +38,7 @@ func GetFileSystemMap() (FileSystemMap, error) {
 }
 
 func getDfOutput() ([]byte, error) {
-	return exec.Command("df", "-P").Output()
+	return exec.Command("df", "-P", "-B", "MB").Output()
 }
 
 func parseDfOutputToFileSystem(dfOutput []byte) ([]*FileSystem, error) {
@@ -78,14 +78,14 @@ func parseDfLineToFileSystem(line string) (*FileSystem, error) {
 			fileSystem.name = part
 		}
 		if index == 2 {
-			i, err := strconv.ParseUint(part, 10, 64)
+			i, err := strconv.ParseUint(strings.TrimRight(part, "MB"), 10, 64)
 			if err != nil {
 				return nil, err
 			}
 			fileSystem.used = i
 		}
 		if index == 3 {
-			i, err := strconv.ParseUint(part, 10, 64)
+			i, err := strconv.ParseUint(strings.TrimRight(part, "MB"), 10, 64)
 			if err != nil {
 				return nil, err
 			}

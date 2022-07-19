@@ -7,36 +7,32 @@ import (
 
 func main() {
 
-	//fileSystems, err := GetFileSystemMap()
-	//if err != nil {
-	//	panic(err)
-	//}
-	//
-	//dd(fileSystems)
-
-	//cpus, err := GetCpuMap()
-	//if err != nil {
-	//	panic(err)
-	//}
-	//
-	//dd(cpus)
-
-	_, err := GetMemory()
+	fileSystems, err := GetFileSystemMap()
 	if err != nil {
 		panic(err)
 	}
 
-	//dd(memory)
+	cpus, err := GetCpuMap()
+	if err != nil {
+		panic(err)
+	}
+
+	memory, err := GetMemory()
+	if err != nil {
+		panic(err)
+	}
 
 	uptime, err := GetUptime()
 	if err != nil {
 		panic(err)
 	}
 
-	dd(uptime)
+	dd(fileSystems, cpus, memory, uptime)
 }
 
-func dd(data interface{}) {
-	fmt.Printf("%+v\n", data)
+func dd(data ...interface{}) {
+	for _, item := range data {
+		fmt.Printf("%+v\n", item)
+	}
 	os.Exit(1)
 }

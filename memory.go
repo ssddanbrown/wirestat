@@ -29,14 +29,18 @@ func GetMemory() (*Memory, error) {
 	mem := &Memory{
 		usedPercent:     uint(float64(used/memInfo.MemTotal) * 100),
 		swapUsedPercent: uint(float64(swapUsed/memInfo.SwapTotal) * 100),
-		total:           memInfo.MemTotal,
-		free:            memInfo.MemFree,
-		available:       memInfo.MemAvailable,
-		used:            used,
-		swapTotal:       memInfo.SwapTotal,
-		swapFree:        memInfo.SwapFree,
-		swapUsed:        swapUsed,
+		total:           kibiToMega(memInfo.MemTotal),
+		free:            kibiToMega(memInfo.MemFree),
+		available:       kibiToMega(memInfo.MemAvailable),
+		used:            kibiToMega(used),
+		swapTotal:       kibiToMega(memInfo.SwapTotal),
+		swapFree:        kibiToMega(memInfo.SwapFree),
+		swapUsed:        kibiToMega(swapUsed),
 	}
 
 	return mem, nil
+}
+
+func kibiToMega(kibiVal uint64) uint64 {
+	return uint64(float64(kibiVal) / 976.5625)
 }

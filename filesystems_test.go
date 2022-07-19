@@ -8,11 +8,11 @@ import (
 func TestParseDfOutputToFileSystem(t *testing.T) {
 
 	dfOutput := []byte(`Filesystem     1024-blocks      Used Available Capacity Mounted on
-devtmpfs              4096         0      4096       0% /dev
-tmpfs              8098376      5328   8093048       1% /dev/shm
-/dev/nvme0n1p3   236815184 207116448  17596336      93% /
-/dev/sdb1        229639500 193740116  24161528      89% /mnt/afd4af7a-2809-4c07-9152-1d5c3933fcd3
-/dev/nvme0n1p1      523248     48204    475044      10% /boot/efi`)
+devtmpfs              4096MB         0MB      4096MB       0% /dev
+tmpfs              8098376MB      5328MB   8093048MB       1% /dev/shm
+/dev/nvme0n1p3   236815184MB 207116448MB  17596336MB      93% /
+/dev/sdb1        229639500MB 193740116MB  24161528MB      89% /mnt/afd4af7a-2809-4c07-9152-1d5c3933fcd3
+/dev/nvme0n1p1      523248MB     48204MB    475044MB      10% /boot/efi`)
 
 	fileSystems, err := parseDfOutputToFileSystem(dfOutput)
 

@@ -1,8 +1,10 @@
 
 
+Filesystem data is in MB
+Memory is in MB
+
 ## TODO
 
-- Check & align units
 - Server & JSON response
 - HTTP Status Code response changes on errors
 - Alert Rule Definition
