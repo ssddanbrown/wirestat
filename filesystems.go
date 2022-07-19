@@ -8,41 +8,41 @@ import (
 	"strings"
 )
 
-type DiskPartitionMap map[string]*DiskPartition
+type FileSystemMap map[string]*FileSystem
 
-type DiskPartition struct {
-	fileSystem  string
+type FileSystem struct {
+	name        string
 	capacity    uint64
 	used        uint64
 	usedPercent uint
 	available   uint64
 }
 
-func GetDiskMap() (DiskPartitionMap, error) {
+func GetFileSystemMap() (FileSystemMap, error) {
 	dfOutput, err := getDfOutput()
 	if err != nil {
 		return nil, err
 	}
 
-	partitions, err := parseDfOutputToPartition(dfOutput)
+	fileSystems, err := parseDfOutputToFileSystem(dfOutput)
 	if err != nil {
 		return nil, err
 	}
 
-	diskMap := make(DiskPartitionMap)
-	for _, partition := range partitions {
-		diskMap[partition.fileSystem] = partition
+	fsMap := make(FileSystemMap)
+	for _, fileSystem := range fileSystems {
+		fsMap[fileSystem.name] = fileSystem
 	}
 
-	return diskMap, nil
+	return fsMap, nil
 }
 
 func getDfOutput() ([]byte, error) {
 	return exec.Command("df", "-P").Output()
 }
 
-func parseDfOutputToPartition(dfOutput []byte) ([]*DiskPartition, error) {
-	partitions := []*DiskPartition{}
+func parseDfOutputToFileSystem(dfOutput []byte) ([]*FileSystem, error) {
+	fileSystems := []*FileSystem{}
 	scanner := bufio.NewScanner(bytes.NewReader(dfOutput))
 	lineCount := 0
 
@@ -53,19 +53,19 @@ func parseDfOutputToPartition(dfOutput []byte) ([]*DiskPartition, error) {
 		}
 
 		line := scanner.Text()
-		partition, err := parseDfLineToPartition(line)
+		fileSystem, err := parseDfLineToFileSystem(line)
 		if err != nil {
 			return nil, err
 		}
 
-		partitions = append(partitions, partition)
+		fileSystems = append(fileSystems, fileSystem)
 	}
 
-	return partitions, nil
+	return fileSystems, nil
 }
 
-func parseDfLineToPartition(line string) (*DiskPartition, error) {
-	partition := DiskPartition{}
+func parseDfLineToFileSystem(line string) (*FileSystem, error) {
+	fileSystem := FileSystem{}
 	parts := strings.Split(line, " ")
 	index := 0
 
@@ -75,21 +75,21 @@ func parseDfLineToPartition(line string) (*DiskPartition, error) {
 		}
 
 		if index == 0 {
-			partition.fileSystem = part
+			fileSystem.name = part
 		}
 		if index == 2 {
 			i, err := strconv.ParseUint(part, 10, 64)
 			if err != nil {
 				return nil, err
 			}
-			partition.used = i
+			fileSystem.used = i
 		}
 		if index == 3 {
 			i, err := strconv.ParseUint(part, 10, 64)
 			if err != nil {
 				return nil, err
 			}
-			partition.available = i
+			fileSystem.available = i
 		}
 		if index == 4 {
 			percent := strings.TrimRight(part, "%")
@@ -97,12 +97,12 @@ func parseDfLineToPartition(line string) (*DiskPartition, error) {
 			if err != nil {
 				return nil, err
 			}
-			partition.usedPercent = uint(i)
+			fileSystem.usedPercent = uint(i)
 		}
 
 		index++
 	}
 
-	partition.capacity = partition.used + partition.available
-	return &partition, nil
+	fileSystem.capacity = fileSystem.used + fileSystem.available
+	return &fileSystem, nil
 }

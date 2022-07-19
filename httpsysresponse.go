@@ -7,12 +7,12 @@ import (
 
 func main() {
 
-	disks, err := GetDiskMap()
+	fileSystems, err := GetFileSystemMap()
 	if err != nil {
 		panic(err)
 	}
 
-	dd(disks)
+	dd(fileSystems)
 }
 
 func dd(data interface{}) {
