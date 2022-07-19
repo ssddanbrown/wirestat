@@ -7,12 +7,19 @@ import (
 
 func main() {
 
-	fileSystems, err := GetFileSystemMap()
+	//fileSystems, err := GetFileSystemMap()
+	//if err != nil {
+	//	panic(err)
+	//}
+	//
+	//dd(fileSystems)
+
+	cpus, err := GetCpuMap()
 	if err != nil {
 		panic(err)
 	}
 
-	dd(fileSystems)
+	dd(cpus)
 }
 
 func dd(data interface{}) {
