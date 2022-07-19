@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type CpuMap map[string]uint
+type CpuMap map[string]uint64
 
 func GetCpuMap() (CpuMap, error) {
 	statA, err := linuxproc.ReadStat("/proc/stat")
@@ -22,7 +22,7 @@ func GetCpuMap() (CpuMap, error) {
 		return nil, fmt.Errorf(statErrMsg, err.Error())
 	}
 
-	resultMap := make(map[string]uint)
+	resultMap := make(map[string]uint64)
 	resultMap["all_active_percent"] = cpuStatToPercent(statA.CPUStatAll, statB.CPUStatAll)
 	for idx, statB := range statB.CPUStats {
 		statA := statA.CPUStats[idx]
@@ -32,7 +32,7 @@ func GetCpuMap() (CpuMap, error) {
 	return resultMap, nil
 }
 
-func cpuStatToPercent(statA, statB linuxproc.CPUStat) uint {
+func cpuStatToPercent(statA, statB linuxproc.CPUStat) uint64 {
 	aIdle := statA.Idle + statA.IOWait
 	bIdle := statB.Idle + statB.IOWait
 
@@ -45,5 +45,5 @@ func cpuStatToPercent(statA, statB linuxproc.CPUStat) uint {
 	totalDiff := bTotal - aTotal
 	idleDiff := bIdle - aIdle
 
-	return uint((float64(totalDiff-idleDiff) / float64(totalDiff)) * 100)
+	return uint64((float64(totalDiff-idleDiff) / float64(totalDiff)) * 100)
 }

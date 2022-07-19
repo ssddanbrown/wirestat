@@ -13,7 +13,7 @@ import (
 type AlertRule struct {
 	Property string `json:"property"`
 	Operator string `json:"operator"`
-	Value    int64  `json:"value"`
+	Value    uint64 `json:"value"`
 	name     string
 }
 
@@ -77,7 +77,7 @@ func parseRuleString(ruleStr string) (*AlertRule, error) {
 		name:     ruleName,
 		Property: property,
 		Operator: operator,
-		Value:    value,
+		Value:    uint64(value),
 	}
 
 	return rule, nil

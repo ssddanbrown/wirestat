@@ -5,8 +5,8 @@ type ResponseBuilder struct {
 }
 
 type Response struct {
-	Rules  map[string]*AlertRule `json:"rules"`
 	Alerts []string              `json:"alerts"`
+	Rules  map[string]*AlertRule `json:"rules"`
 	*System
 }
 
@@ -22,10 +22,11 @@ func NewResponseBuilder(rules []*AlertRule) *ResponseBuilder {
 
 func (r *ResponseBuilder) GetResponseData() *Response {
 	system := GetLatestSystem()
+	alerts := RunRulesAgainstSystem(r.rules, system)
 
 	return &Response{
 		System: system,
 		Rules:  r.rules,
-		Alerts: []string{},
+		Alerts: alerts,
 	}
 }
