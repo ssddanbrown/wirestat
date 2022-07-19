@@ -6,7 +6,6 @@ import (
 )
 
 type System struct {
-	Alerts         []string      `json:"alerts"`
 	Filesystem     FileSystemMap `json:"filesystem"`
 	Cpu            CpuMap        `json:"cpu"`
 	Memory         *Memory       `json:"memory"`
@@ -56,7 +55,6 @@ func getSystem() (*System, error) {
 	}
 
 	system := &System{
-		Alerts:         []string{},
 		Filesystem:     fileSystems,
 		Cpu:            cpus,
 		Memory:         memory,

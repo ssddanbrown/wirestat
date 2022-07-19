@@ -6,8 +6,15 @@ import (
 )
 
 func main() {
+	rules, err := parseRuleFile("/home/dan/GolandProjects/httpsysresponse/rules.txt")
+	if err != nil {
+		panic(err)
+	}
+
+	responseBuilder := NewResponseBuilder(rules)
+
 	go StartPollingSystem()
-	startServer()
+	startServer(responseBuilder)
 }
 
 func dd(data ...interface{}) {

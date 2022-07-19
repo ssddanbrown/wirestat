@@ -5,7 +5,6 @@ Memory is in MB
 
 ## TODO
 
-- Alert Rule Definition
 - Alert Detection
 - Alert in response
 - SystemD unit writer

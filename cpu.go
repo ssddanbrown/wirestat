@@ -23,10 +23,10 @@ func GetCpuMap() (CpuMap, error) {
 	}
 
 	resultMap := make(map[string]uint)
-	resultMap["all"] = cpuStatToPercent(statA.CPUStatAll, statB.CPUStatAll)
+	resultMap["all_active_percent"] = cpuStatToPercent(statA.CPUStatAll, statB.CPUStatAll)
 	for idx, statB := range statB.CPUStats {
 		statA := statA.CPUStats[idx]
-		resultMap[statB.Id] = cpuStatToPercent(statA, statB)
+		resultMap[statB.Id+"_active_percent"] = cpuStatToPercent(statA, statB)
 	}
 
 	return resultMap, nil
