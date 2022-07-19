@@ -5,8 +5,6 @@ Memory is in MB
 
 ## TODO
 
-- Server & JSON response
-- HTTP Status Code response changes on errors
 - Alert Rule Definition
 - Alert Detection
 - Alert in response

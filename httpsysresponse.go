@@ -6,28 +6,7 @@ import (
 )
 
 func main() {
-
-	fileSystems, err := GetFileSystemMap()
-	if err != nil {
-		panic(err)
-	}
-
-	cpus, err := GetCpuMap()
-	if err != nil {
-		panic(err)
-	}
-
-	memory, err := GetMemory()
-	if err != nil {
-		panic(err)
-	}
-
-	uptime, err := GetUptime()
-	if err != nil {
-		panic(err)
-	}
-
-	dd(fileSystems, cpus, memory, uptime)
+	startServer()
 }
 
 func dd(data ...interface{}) {

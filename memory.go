@@ -6,15 +6,15 @@ import (
 )
 
 type Memory struct {
-	usedPercent     uint
-	swapUsedPercent uint
-	total           uint64
-	free            uint64
-	available       uint64
-	used            uint64
-	swapTotal       uint64
-	swapFree        uint64
-	swapUsed        uint64
+	UsedPercent     uint   `json:"used_percent"`
+	SwapUsedPercent uint   `json:"swap_used_percent"`
+	Total           uint64 `json:"total"`
+	Free            uint64 `json:"free"`
+	Available       uint64 `json:"available"`
+	Used            uint64 `json:"used"`
+	SwapTotal       uint64 `json:"swap_total"`
+	SwapFree        uint64 `json:"swap_free"`
+	SwapUsed        uint64 `json:"swap_used"`
 }
 
 func GetMemory() (*Memory, error) {
@@ -27,15 +27,15 @@ func GetMemory() (*Memory, error) {
 	swapUsed := memInfo.SwapTotal - memInfo.SwapFree
 
 	mem := &Memory{
-		usedPercent:     uint(float64(used/memInfo.MemTotal) * 100),
-		swapUsedPercent: uint(float64(swapUsed/memInfo.SwapTotal) * 100),
-		total:           kibiToMega(memInfo.MemTotal),
-		free:            kibiToMega(memInfo.MemFree),
-		available:       kibiToMega(memInfo.MemAvailable),
-		used:            kibiToMega(used),
-		swapTotal:       kibiToMega(memInfo.SwapTotal),
-		swapFree:        kibiToMega(memInfo.SwapFree),
-		swapUsed:        kibiToMega(swapUsed),
+		UsedPercent:     uint(float64(used/memInfo.MemTotal) * 100),
+		SwapUsedPercent: uint(float64(swapUsed/memInfo.SwapTotal) * 100),
+		Total:           kibiToMega(memInfo.MemTotal),
+		Free:            kibiToMega(memInfo.MemFree),
+		Available:       kibiToMega(memInfo.MemAvailable),
+		Used:            kibiToMega(used),
+		SwapTotal:       kibiToMega(memInfo.SwapTotal),
+		SwapFree:        kibiToMega(memInfo.SwapFree),
+		SwapUsed:        kibiToMega(swapUsed),
 	}
 
 	return mem, nil

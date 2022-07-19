@@ -11,11 +11,11 @@ import (
 type FileSystemMap map[string]*FileSystem
 
 type FileSystem struct {
-	name        string
-	capacity    uint64
-	used        uint64
-	usedPercent uint
-	available   uint64
+	Name        string `json:"name"`
+	Capacity    uint64 `json:"capacity"`
+	Used        uint64 `json:"used"`
+	UsedPercent uint   `json:"used_percent"`
+	Available   uint64 `json:"available"`
 }
 
 func GetFileSystemMap() (FileSystemMap, error) {
@@ -31,7 +31,7 @@ func GetFileSystemMap() (FileSystemMap, error) {
 
 	fsMap := make(FileSystemMap)
 	for _, fileSystem := range fileSystems {
-		fsMap[fileSystem.name] = fileSystem
+		fsMap[fileSystem.Name] = fileSystem
 	}
 
 	return fsMap, nil
@@ -75,21 +75,21 @@ func parseDfLineToFileSystem(line string) (*FileSystem, error) {
 		}
 
 		if index == 0 {
-			fileSystem.name = part
+			fileSystem.Name = part
 		}
 		if index == 2 {
 			i, err := strconv.ParseUint(strings.TrimRight(part, "MB"), 10, 64)
 			if err != nil {
 				return nil, err
 			}
-			fileSystem.used = i
+			fileSystem.Used = i
 		}
 		if index == 3 {
 			i, err := strconv.ParseUint(strings.TrimRight(part, "MB"), 10, 64)
 			if err != nil {
 				return nil, err
 			}
-			fileSystem.available = i
+			fileSystem.Available = i
 		}
 		if index == 4 {
 			percent := strings.TrimRight(part, "%")
@@ -97,12 +97,12 @@ func parseDfLineToFileSystem(line string) (*FileSystem, error) {
 			if err != nil {
 				return nil, err
 			}
-			fileSystem.usedPercent = uint(i)
+			fileSystem.UsedPercent = uint(i)
 		}
 
 		index++
 	}
 
-	fileSystem.capacity = fileSystem.used + fileSystem.available
+	fileSystem.Capacity = fileSystem.Used + fileSystem.Available
 	return &fileSystem, nil
 }

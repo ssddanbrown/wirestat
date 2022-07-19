@@ -6,7 +6,9 @@ import (
 	"time"
 )
 
-func GetCpuMap() (map[string]uint, error) {
+type CpuMap map[string]uint
+
+func GetCpuMap() (CpuMap, error) {
 	statA, err := linuxproc.ReadStat("/proc/stat")
 	statErrMsg := "failed to stat CPU data, received error: %s"
 	if err != nil {

@@ -7,10 +7,10 @@ import (
 )
 
 type Uptime struct {
-	seconds int
-	minutes int
-	hours   int
-	days    int
+	Seconds int `json:"seconds"`
+	Minutes int `json:"minutes"`
+	Hours   int `json:"hours"`
+	Days    int `json:"days"`
 }
 
 func GetUptime() (*Uptime, error) {
@@ -30,10 +30,10 @@ func GetUptime() (*Uptime, error) {
 	seconds = seconds - (minutes * 60)
 
 	uptime := &Uptime{
-		seconds: seconds,
-		minutes: minutes,
-		hours:   hours,
-		days:    days,
+		Seconds: seconds,
+		Minutes: minutes,
+		Hours:   hours,
+		Days:    days,
 	}
 
 	return uptime, nil
