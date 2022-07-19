@@ -14,12 +14,19 @@ func main() {
 	//
 	//dd(fileSystems)
 
-	cpus, err := GetCpuMap()
+	//cpus, err := GetCpuMap()
+	//if err != nil {
+	//	panic(err)
+	//}
+	//
+	//dd(cpus)
+
+	memory, err := GetMemory()
 	if err != nil {
 		panic(err)
 	}
 
-	dd(cpus)
+	dd(memory)
 }
 
 func dd(data interface{}) {

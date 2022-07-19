@@ -12,10 +12,10 @@ type FileSystemMap map[string]*FileSystem
 
 type FileSystem struct {
 	name        string
-	capacity    uint64
-	used        uint64
+	capacity    uint64 // bytes?
+	used        uint64 // bytes?
 	usedPercent uint
-	available   uint64
+	available   uint64 // bytes?
 }
 
 func GetFileSystemMap() (FileSystemMap, error) {
