@@ -12,10 +12,7 @@ func startServer() {
 }
 
 func serve(w http.ResponseWriter, r *http.Request) {
-	system, err := getSystem()
-	if err != nil {
-		system.Alerts = append(system.Alerts, fmt.Sprintf("System data fetch failed with error %s", err))
-	}
+	system := GetLatestSystem()
 
 	rJson, err := json.MarshalIndent(system, "", "    ")
 	if err != nil {
