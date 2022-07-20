@@ -4,22 +4,34 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 )
 
 func main() {
 
 	portOpt := flag.Uint("port", 8930, "Port to run the server on")
-	rulesPathOpt := flag.String("rules", "/etc/httpsysresponse/rules.txt", "Path to the file containing rules")
+	rulesPathOpt := flag.String("rules", "/etc/wirestat/rules.txt", "Path to the file containing rules")
 
 	flag.Parse()
-
-	_, err := os.Stat(*rulesPathOpt)
+	args := flag.Args()
+	rulesPath, err := filepath.Abs(*rulesPathOpt)
 	if err != nil {
-		fmt.Println(fmt.Sprintf("Startup failed, error when checking rules file at %s", *rulesPathOpt))
+		panic(err)
+	}
+
+	if len(args) > 0 && args[0] == "systemd" {
+		config := GenerateSystemdConfig(*portOpt, rulesPath)
+		fmt.Println(config)
+		os.Exit(0)
+	}
+
+	_, err = os.Stat(rulesPath)
+	if err != nil {
+		fmt.Println(fmt.Sprintf("Startup failed, error when checking rules file at %s", rulesPath))
 		os.Exit(1)
 	}
 
-	rules, err := parseRuleFile(*rulesPathOpt)
+	rules, err := parseRuleFile(rulesPath)
 	if err != nil {
 		fmt.Println(fmt.Sprintf("Startup failed, error when parsing rules file: %s", err.Error()))
 		os.Exit(1)

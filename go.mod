@@ -1,4 +1,4 @@
-module httpsysresponse
+module wirestat
 
 go 1.18
 
