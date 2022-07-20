@@ -8,11 +8,11 @@ import (
 
 var responseBuilder *ResponseBuilder
 
-func startServer(respBuilder *ResponseBuilder) {
+func startServer(respBuilder *ResponseBuilder, port uint) {
 	responseBuilder = respBuilder
 
 	http.HandleFunc("/", serve)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", port), nil)
 }
 
 func serve(w http.ResponseWriter, r *http.Request) {

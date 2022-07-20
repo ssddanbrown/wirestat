@@ -3,14 +3,15 @@
 Filesystem data is in MB
 Memory is in MB
 
+## Rule Format
+
+cpu.all_active_percent >= 50 : CPU should not go over 50%
+
 ## TODO
 
-- Alert Detection
-- Alert in response
 - SystemD unit writer
   - (Takes the binary path and uses that in config)
   - Advise downloading/moving to /usr/local/bin
-- Configurable port
 
 ## Dodgy Practice List
 
