@@ -1,15 +1,18 @@
 package main
 
-import (
-	"reflect"
-	"strings"
-)
+import "fmt"
 
-func RunRulesAgainstSystem(rules map[string]*AlertRule, system *System) []string {
+func RunRulesAgainstMetrics(rules map[string]*AlertRule, metrics map[string]uint64) []string {
 	var alerts []string
 
 	for _, rule := range rules {
-		if ruleFails(rule, system) {
+		fails, err := ruleFails(rule, metrics)
+		if err != nil {
+			alerts = append(alerts, err.Error())
+			continue
+		}
+
+		if fails {
 			alerts = append(alerts, rule.name)
 		}
 	}
@@ -17,80 +20,31 @@ func RunRulesAgainstSystem(rules map[string]*AlertRule, system *System) []string
 	return alerts
 }
 
-func ruleFails(rule *AlertRule, system *System) bool {
+func ruleFails(rule *AlertRule, metrics map[string]uint64) (bool, error) {
 
-	val := getSystemValAtProp(rule.Property, system)
+	val, exists := metrics[rule.Property]
+	if !exists {
+		return false, fmt.Errorf(`rule contains non-existing property "%s"`, rule.Property)
+	}
 
 	if rule.Operator == ">" {
-		return val > rule.Value
+		return val > rule.Value, nil
 	}
 	if rule.Operator == "<" {
-		return val < rule.Value
+		return val < rule.Value, nil
 	}
 	if rule.Operator == "=" {
-		return val == rule.Value
+		return val == rule.Value, nil
 	}
 	if rule.Operator == "!=" {
-		return val != rule.Value
+		return val != rule.Value, nil
 	}
 	if rule.Operator == "<=" {
-		return val <= rule.Value
+		return val <= rule.Value, nil
 	}
 	if rule.Operator == ">=" {
-		return val >= rule.Value
+		return val >= rule.Value, nil
 	}
 
-	panic("Did not match an operator during rule check")
-}
-
-func getSystemValAtProp(prop string, system *System) uint64 {
-	splitProp := strings.Split(prop, ".")
-	var cObject interface{} = system
-	var val uint64
-
-	for i, jsonProp := range splitProp {
-		if cObject == nil {
-			break
-		}
-
-		atEnd := i == len(splitProp)-1
-		objType := reflect.ValueOf(cObject).Kind()
-		if objType == reflect.Map {
-			mapValtype := reflect.TypeOf(cObject).Elem()
-
-			// Flatten everything, All sub system checks so everything is a giant map
-			// that we can easily access using this key.
-			// Could be under a "metrics" key
-
-			if atEnd {
-				val = cObject[jsonProp].(uint64)
-			} else {
-				cObject = cObject.(map[string]any)[jsonProp]
-			}
-
-			continue
-		}
-
-		prop := jsonToPropCase(jsonProp)
-		r := reflect.ValueOf(cObject)
-		f := reflect.Indirect(r).FieldByName(prop)
-
-		if atEnd {
-			val = f.Uint()
-		} else {
-			cObject = f.Interface()
-		}
-
-	}
-
-	return val
-}
-
-func jsonToPropCase(jsonProp string) string {
-	propCase := ""
-	parts := strings.Split(jsonProp, "_")
-	for _, part := range parts {
-		propCase += strings.ToUpper(part[0:1]) + part[1:]
-	}
-	return propCase
+	return false, fmt.Errorf(`rule contains invalid operator "%s"`, rule.Operator)
 }

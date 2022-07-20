@@ -6,11 +6,26 @@ import (
 )
 
 type System struct {
-	Filesystem     FileSystemMap `json:"filesystem"`
-	Cpu            CpuMap        `json:"cpu"`
-	Memory         *Memory       `json:"memory"`
-	Uptime         *Uptime       `json:"uptime"`
-	StatsUpdatedAt time.Time     `json:"stats_updated_at"`
+	Filesystem     map[string]uint64 `json:"filesystem"`
+	Cpu            map[string]uint64 `json:"cpu"`
+	Memory         map[string]uint64 `json:"memory"`
+	Uptime         map[string]uint64 `json:"uptime"`
+	StatsUpdatedAt time.Time         `json:"stats_updated_at"`
+}
+
+func (s *System) mergeMaps() map[string]uint64 {
+	merged := make(map[string]uint64)
+	maps := []map[string]uint64{s.Filesystem, s.Cpu, s.Memory, s.Uptime}
+	prefixes := []string{"filesystem", "cpu", "memory", "uptime"}
+
+	for mapIndex, sMap := range maps {
+		for k, v := range sMap {
+			fullKey := prefixes[mapIndex] + "." + k
+			merged[fullKey] = v
+		}
+	}
+
+	return merged
 }
 
 var latestSystem *System

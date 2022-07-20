@@ -6,14 +6,7 @@ import (
 	"math"
 )
 
-type Uptime struct {
-	Seconds int `json:"seconds"`
-	Minutes int `json:"minutes"`
-	Hours   int `json:"hours"`
-	Days    int `json:"days"`
-}
-
-func GetUptime() (*Uptime, error) {
+func GetUptime() (map[string]uint64, error) {
 	utInfo, err := linuxproc.ReadUptime("/proc/uptime")
 	if err != nil {
 		return nil, fmt.Errorf("failed to stat uptime data, received error: %s", err.Error())
@@ -29,11 +22,11 @@ func GetUptime() (*Uptime, error) {
 	minutes := int(math.Floor(float64(seconds) / 60))
 	seconds = seconds - (minutes * 60)
 
-	uptime := &Uptime{
-		Seconds: seconds,
-		Minutes: minutes,
-		Hours:   hours,
-		Days:    days,
+	uptime := map[string]uint64{
+		"seconds": uint64(seconds),
+		"minutes": uint64(minutes),
+		"hours":   uint64(hours),
+		"days":    uint64(days),
 	}
 
 	return uptime, nil

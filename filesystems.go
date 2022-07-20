@@ -8,17 +8,15 @@ import (
 	"strings"
 )
 
-type FileSystemMap map[string]*FileSystem
-
-type FileSystem struct {
-	Name        string `json:"name"`
-	Capacity    uint64 `json:"capacity"`
-	Used        uint64 `json:"used"`
-	UsedPercent uint   `json:"used_percent"`
-	Available   uint64 `json:"available"`
+type fileSystem struct {
+	name        string
+	capacity    uint64
+	used        uint64
+	usedPercent uint
+	available   uint64
 }
 
-func GetFileSystemMap() (FileSystemMap, error) {
+func GetFileSystemMap() (map[string]uint64, error) {
 	dfOutput, err := getDfOutput()
 	if err != nil {
 		return nil, err
@@ -29,9 +27,12 @@ func GetFileSystemMap() (FileSystemMap, error) {
 		return nil, err
 	}
 
-	fsMap := make(FileSystemMap)
+	fsMap := make(map[string]uint64)
 	for _, fileSystem := range fileSystems {
-		fsMap[fileSystem.Name] = fileSystem
+		fsMap[fileSystem.name+".capacity"] = fileSystem.capacity
+		fsMap[fileSystem.name+".used"] = fileSystem.used
+		fsMap[fileSystem.name+".used_percent"] = uint64(fileSystem.usedPercent)
+		fsMap[fileSystem.name+".available"] = fileSystem.available
 	}
 
 	return fsMap, nil
@@ -41,8 +42,8 @@ func getDfOutput() ([]byte, error) {
 	return exec.Command("df", "-P", "-B", "MB").Output()
 }
 
-func parseDfOutputToFileSystem(dfOutput []byte) ([]*FileSystem, error) {
-	fileSystems := []*FileSystem{}
+func parseDfOutputToFileSystem(dfOutput []byte) ([]*fileSystem, error) {
+	fileSystems := []*fileSystem{}
 	scanner := bufio.NewScanner(bytes.NewReader(dfOutput))
 	lineCount := 0
 
@@ -64,8 +65,8 @@ func parseDfOutputToFileSystem(dfOutput []byte) ([]*FileSystem, error) {
 	return fileSystems, nil
 }
 
-func parseDfLineToFileSystem(line string) (*FileSystem, error) {
-	fileSystem := FileSystem{}
+func parseDfLineToFileSystem(line string) (*fileSystem, error) {
+	fileSystem := fileSystem{}
 	parts := strings.Split(line, " ")
 	index := 0
 
@@ -75,21 +76,21 @@ func parseDfLineToFileSystem(line string) (*FileSystem, error) {
 		}
 
 		if index == 0 {
-			fileSystem.Name = part
+			fileSystem.name = part
 		}
 		if index == 2 {
 			i, err := strconv.ParseUint(strings.TrimRight(part, "MB"), 10, 64)
 			if err != nil {
 				return nil, err
 			}
-			fileSystem.Used = i
+			fileSystem.used = i
 		}
 		if index == 3 {
 			i, err := strconv.ParseUint(strings.TrimRight(part, "MB"), 10, 64)
 			if err != nil {
 				return nil, err
 			}
-			fileSystem.Available = i
+			fileSystem.available = i
 		}
 		if index == 4 {
 			percent := strings.TrimRight(part, "%")
@@ -97,12 +98,12 @@ func parseDfLineToFileSystem(line string) (*FileSystem, error) {
 			if err != nil {
 				return nil, err
 			}
-			fileSystem.UsedPercent = uint(i)
+			fileSystem.usedPercent = uint(i)
 		}
 
 		index++
 	}
 
-	fileSystem.Capacity = fileSystem.Used + fileSystem.Available
+	fileSystem.capacity = fileSystem.used + fileSystem.available
 	return &fileSystem, nil
 }
