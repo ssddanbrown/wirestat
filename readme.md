@@ -1,8 +1,18 @@
 # wirestat
 
-Filesystem data is in MB
-Memory is in MB
-Warning about low golang skill
+- Filesystem data is in MB
+- Memory is in MB
+- Warning about low golang skill
+- Default port = 8930, might need opening on firewall
+- Default rules file = /etc/wirestat/rules.txt
+- Update instructions
+- Command to download from GitHub release
+- Build & attach on release
+- Quickstart script with the below commands via a curl | bash script?
+
+- Tested on:
+  - Ubuntu 20.04
+  - Fedora 36
 
 ## Install
 

@@ -18,8 +18,17 @@ jobs:
       with:
         go-version: 1.18
 
-    - name: Build
-      run: go build -v ./...
-
     - name: Test
       run: go test -v ./...
+
+    - name: Build
+      env:
+        GOOS: linux
+        GOARCH: amd64
+      run: go build -v -o build/wirestat_linux_amd64 ./...
+
+    - name: Upload binaries
+      uses: actions/upload-artifact@v3
+      with:
+        name: built-binaries
+        path: build/wirestat*
