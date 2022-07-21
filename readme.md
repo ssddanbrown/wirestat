@@ -17,6 +17,9 @@
 ## Install
 
 ```bash
+# Download latest release binary
+curl https://github.com/ssddanbrown/wirestat/releases/latest/download/wirestat_linux_amd64 -Lo wirestat
+
 # Make binary executable & move binary to /usr/local/bin
 chmod +x wirestat
 sudo mv wirestat /usr/local/bin/wirestat
