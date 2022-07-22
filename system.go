@@ -6,11 +6,11 @@ import (
 )
 
 type System struct {
-	Filesystem     map[string]uint64 `json:"filesystem"`
-	Cpu            map[string]uint64 `json:"cpu"`
-	Memory         map[string]uint64 `json:"memory"`
-	Uptime         map[string]uint64 `json:"uptime"`
-	StatsUpdatedAt time.Time         `json:"stats_updated_at"`
+	Filesystem       map[string]uint64
+	Cpu              map[string]uint64
+	Memory           map[string]uint64
+	Uptime           map[string]uint64
+	MetricsUpdatedAt time.Time
 }
 
 func (s *System) mergeMaps() map[string]uint64 {
@@ -70,11 +70,11 @@ func getSystem() (*System, error) {
 	}
 
 	system := &System{
-		Filesystem:     fileSystems,
-		Cpu:            cpus,
-		Memory:         memory,
-		Uptime:         uptime,
-		StatsUpdatedAt: time.Now(),
+		Filesystem:       fileSystems,
+		Cpu:              cpus,
+		Memory:           memory,
+		Uptime:           uptime,
+		MetricsUpdatedAt: time.Now(),
 	}
 
 	return system, nil

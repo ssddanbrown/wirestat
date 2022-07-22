@@ -16,7 +16,7 @@ func GenerateSystemdConfig(port uint, rulesPath string) string {
 
 	config := fmt.Sprintf(`
 [Unit]
-Description=WireStat
+Description=wirestat
 After=network.target
 
 [Service]
