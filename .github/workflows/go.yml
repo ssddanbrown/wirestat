@@ -21,11 +21,17 @@ jobs:
     - name: Test
       run: go test -v ./...
 
-    - name: Build
+    - name: Build Linux binary
       env:
         GOOS: linux
         GOARCH: amd64
       run: go build -v -o build/wirestat_linux_amd64 ./...
+
+    - name: Build ARM binary
+      env:
+        GOOS: linux
+        GOARCH: arm64
+      run: go build -v -o build/wirestat_linux_arm64 ./...
 
     - name: Upload binaries
       uses: actions/upload-artifact@v3
