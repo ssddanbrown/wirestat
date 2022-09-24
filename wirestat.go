@@ -11,6 +11,7 @@ func main() {
 
 	portOpt := flag.Uint("port", 8930, "Port to run the server on")
 	rulesPathOpt := flag.String("rules", "/etc/wirestat/rules.txt", "Path to the file containing rules")
+	accessKey := flag.String("accesskey", "", "Key required for web endpoint access")
 
 	flag.Parse()
 	args := flag.Args()
@@ -20,7 +21,7 @@ func main() {
 	}
 
 	if len(args) > 0 && args[0] == "systemd" {
-		config := GenerateSystemdConfig(*portOpt, rulesPath)
+		config := GenerateSystemdConfig(*portOpt, rulesPath, *accessKey)
 		fmt.Println(config)
 		os.Exit(0)
 	}
@@ -42,7 +43,7 @@ func main() {
 	go StartPollingSystem()
 
 	fmt.Println(fmt.Sprintf("Starting server, listening on: http://0.0.0.0:%d", *portOpt))
-	startServer(responseBuilder, *portOpt)
+	startServer(responseBuilder, *portOpt, *accessKey)
 }
 
 func dd(data ...interface{}) {

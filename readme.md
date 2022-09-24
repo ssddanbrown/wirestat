@@ -214,6 +214,20 @@ The path to the rules file to read. Defaults to `/etc/wirestat/rules.txt`.
 wirestat -rules /home/barry/wirestat-rules.txt
 ```
 
+#### `-accesskey`
+
+Define a key string to be required to access the JSON output.
+
+```bash
+# Example of setting a custom access key
+wirestat -accesskey "hunter2"
+```
+
+When this option is set you'll need to provide this key value, when accessing the JSON data, as either:
+
+- A `key` query parameter value in the URL.
+- A `X-Access-Key` header value.
+
 #### `systemd`
 
 This argument will tell wirestat to print systemd configuration to stdout, instead of running the application as normal. Other options can be passed with this argument, and those options will be used within the command output.

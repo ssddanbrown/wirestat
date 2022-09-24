@@ -7,11 +7,16 @@ import (
 	"strings"
 )
 
-func GenerateSystemdConfig(port uint, rulesPath string) string {
+func GenerateSystemdConfig(port uint, rulesPath string, accessKey string) string {
 
 	execPath, err := os.Executable()
 	if err != nil {
 		log.Panicf("Failed getting the current executable path with error: %s", err.Error())
+	}
+
+	accessKeyOpt := ""
+	if accessKey != "" {
+		accessKeyOpt = fmt.Sprintf(`-accesskey "%s"`, accessKey)
 	}
 
 	config := fmt.Sprintf(`
@@ -23,11 +28,11 @@ After=network.target
 Type=simple
 Restart=always
 RestartSec=1s
-ExecStart=%s -port %d -rules "%s"
+ExecStart=%s -port %d -rules "%s" %s
 
 [Install]
 WantedBy=multi-user.target
-	`, execPath, port, rulesPath)
+	`, execPath, port, rulesPath, accessKeyOpt)
 
 	return strings.TrimSpace(config)
 }

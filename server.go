@@ -6,30 +6,52 @@ import (
 	"net/http"
 )
 
-var responseBuilder *ResponseBuilder
+type middlewareFunc func(http.Handler) http.Handler
 
-func startServer(respBuilder *ResponseBuilder, port uint) {
-	responseBuilder = respBuilder
+func startServer(respBuilder *ResponseBuilder, port uint, accessKey string) {
+	accessMiddleware := getAccessControlMiddleware(accessKey)
+	responseHandler := getResponseHandler(respBuilder)
 
-	http.HandleFunc("/", serve)
+	http.Handle("/", accessMiddleware(responseHandler))
 	http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", port), nil)
 }
 
-func serve(w http.ResponseWriter, r *http.Request) {
-	response := responseBuilder.GetResponseData()
+func getAccessControlMiddleware(accessKey string) middlewareFunc {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-	rJson, err := json.MarshalIndent(response, "", "    ")
-	if err != nil {
-		rJson = []byte(fmt.Sprintf("Failed to properly encode system data to JSON, with error: %s\n", err))
+			if accessKey != "" {
+				keyHeader := r.Header.Get("X-Access-Key")
+				keyQuery := r.URL.Query().Get("key")
+				if accessKey != keyHeader && accessKey != keyQuery {
+					w.WriteHeader(http.StatusUnauthorized)
+					w.Write([]byte("Invalid access key provided"))
+					return
+				}
+			}
+
+			next.ServeHTTP(w, r)
+		})
 	}
+}
 
-	w.Header().Set("Content-Type", "application/json")
+func getResponseHandler(builder *ResponseBuilder) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		response := builder.GetResponseData()
 
-	if len(response.Alerts) > 0 {
-		w.WriteHeader(http.StatusInternalServerError)
-	} else {
-		w.WriteHeader(http.StatusOK)
-	}
+		rJson, err := json.MarshalIndent(response, "", "    ")
+		if err != nil {
+			rJson = []byte(fmt.Sprintf("Failed to properly encode system data to JSON, with error: %s\n", err))
+		}
 
-	w.Write(rJson)
+		w.Header().Set("Content-Type", "application/json")
+
+		if len(response.Alerts) > 0 {
+			w.WriteHeader(http.StatusInternalServerError)
+		} else {
+			w.WriteHeader(http.StatusOK)
+		}
+
+		w.Write(rJson)
+	})
 }
