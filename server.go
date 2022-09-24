@@ -8,12 +8,20 @@ import (
 
 type middlewareFunc func(http.Handler) http.Handler
 
-func startServer(respBuilder *ResponseBuilder, port uint, accessKey string) {
+func startServer(respBuilder ResponseFunc, port uint, accessKey string) {
+	handler := getServerHandler(respBuilder, accessKey)
+	http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", port), handler)
+}
+
+func getServerHandler(respBuilder ResponseFunc, accessKey string) http.Handler {
+	mux := http.NewServeMux()
+
 	accessMiddleware := getAccessControlMiddleware(accessKey)
 	responseHandler := getResponseHandler(respBuilder)
 
-	http.Handle("/", accessMiddleware(responseHandler))
-	http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", port), nil)
+	mux.Handle("/", accessMiddleware(responseHandler))
+
+	return mux
 }
 
 func getAccessControlMiddleware(accessKey string) middlewareFunc {
@@ -35,9 +43,9 @@ func getAccessControlMiddleware(accessKey string) middlewareFunc {
 	}
 }
 
-func getResponseHandler(builder *ResponseBuilder) http.Handler {
+func getResponseHandler(builder ResponseFunc) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		response := builder.GetResponseData()
+		response := builder()
 
 		rJson, err := json.MarshalIndent(response, "", "    ")
 		if err != nil {

@@ -6,6 +6,8 @@ type ResponseBuilder struct {
 	rules map[string]*AlertRule
 }
 
+type ResponseFunc func() *Response
+
 type Response struct {
 	Alerts           []string              `json:"alerts"`
 	Rules            map[string]*AlertRule `json:"rules"`

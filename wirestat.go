@@ -43,7 +43,7 @@ func main() {
 	go StartPollingSystem()
 
 	fmt.Println(fmt.Sprintf("Starting server, listening on: http://0.0.0.0:%d", *portOpt))
-	startServer(responseBuilder, *portOpt, *accessKey)
+	startServer(responseBuilder.GetResponseData, *portOpt, *accessKey)
 }
 
 func dd(data ...interface{}) {

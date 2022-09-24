@@ -216,7 +216,7 @@ wirestat -rules /home/barry/wirestat-rules.txt
 
 #### `-accesskey`
 
-Define a key string to be required to access the JSON output.
+Define a key string to be required to access the JSON output, as a very basic form of authorization.
 
 ```bash
 # Example of setting a custom access key
