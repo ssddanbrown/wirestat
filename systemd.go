@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func GenerateSystemdConfig(port uint, rulesPath string, accessKey string) string {
+func GenerateSystemdConfig(port uint, rulesPath string, accessKey string, ruleDelimeter string) string {
 
 	execPath, err := os.Executable()
 	if err != nil {
@@ -19,6 +19,11 @@ func GenerateSystemdConfig(port uint, rulesPath string, accessKey string) string
 		accessKeyOpt = fmt.Sprintf(`-accesskey "%s"`, accessKey)
 	}
 
+	ruleDelimeterOpt := ""
+	if ruleDelimeter != ":" {
+		ruleDelimeterOpt = fmt.Sprintf(`-ruledelimeter "%s"`, ruleDelimeter)
+	}
+
 	config := fmt.Sprintf(`
 [Unit]
 Description=wirestat
@@ -28,11 +33,11 @@ After=network.target
 Type=simple
 Restart=always
 RestartSec=1s
-ExecStart=%s -port %d -rules "%s" %s
+ExecStart=%s -port %d -rules "%s" %s %s
 
 [Install]
 WantedBy=multi-user.target
-	`, execPath, port, rulesPath, accessKeyOpt)
+	`, execPath, port, rulesPath, accessKeyOpt, ruleDelimeterOpt)
 
 	return strings.TrimSpace(config)
 }
