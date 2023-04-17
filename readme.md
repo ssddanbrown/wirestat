@@ -228,6 +228,15 @@ When this option is set you'll need to provide this key value, when accessing th
 - A `key` query parameter value in the URL.
 - A `X-Access-Key` header value.
 
+#### `-ruledelimiter`
+
+The delimeter to use when parsing rules. Use this if you have metrics that have : within them.
+
+```bash
+# Example of using ~ as the rule delimeter instead of :
+wirestat -ruledelimeter "~"
+```
+
 #### `systemd`
 
 This argument will tell wirestat to print systemd configuration to stdout, instead of running the application as normal. Other options can be passed with this argument, and those options will be used within the command output.

@@ -12,6 +12,7 @@ func main() {
 	portOpt := flag.Uint("port", 8930, "Port to run the server on")
 	rulesPathOpt := flag.String("rules", "/etc/wirestat/rules.txt", "Path to the file containing rules")
 	accessKey := flag.String("accesskey", "", "Key required for web endpoint access")
+	ruleDelimiter := flag.String("ruledelimiter", ":", "Delimiter for rule metric and stat")
 
 	flag.Parse()
 	args := flag.Args()
@@ -21,7 +22,7 @@ func main() {
 	}
 
 	if len(args) > 0 && args[0] == "systemd" {
-		config := GenerateSystemdConfig(*portOpt, rulesPath, *accessKey)
+		config := GenerateSystemdConfig(*portOpt, rulesPath, *accessKey, *ruleDelimiter)
 		fmt.Println(config)
 		os.Exit(0)
 	}
@@ -32,7 +33,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	rules, err := parseRuleFile(rulesPath)
+	rules, err := parseRuleFile(rulesPath, *ruleDelimiter)
 	if err != nil {
 		fmt.Println(fmt.Sprintf("Startup failed, error when parsing rules file: %s", err.Error()))
 		os.Exit(1)
