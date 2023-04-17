@@ -16,7 +16,7 @@ func TestParseRuleString(t *testing.T) {
 	assert.EqualValues(t, rule.Value, 50)
 
 	// Valid rule with Custom Delim
-	rule, err := parseRuleString("cpu.all >= 50 & CPU should not go over 50%", "&")
+	rule, err = parseRuleString("cpu.all >= 50 & CPU should not go over 50%", "&")
 	assert.NoError(t, err)
 	assert.Equal(t, rule.name, "CPU should not go over 50%")
 	assert.Equal(t, rule.Operator, ">=")
