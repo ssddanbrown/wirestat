@@ -7,7 +7,7 @@ import (
 
 func TestParseRuleString(t *testing.T) {
 	// Valid rule
-	string defaultDelim = ":"
+	defaultDelim := ":"
 	rule, err := parseRuleString("cpu.all >= 50 : CPU should not go over 50%", defaultDelim)
 	assert.NoError(t, err)
 	assert.Equal(t, rule.name, "CPU should not go over 50%")
