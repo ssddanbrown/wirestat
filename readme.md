@@ -136,7 +136,7 @@ The rules file should contain one rule per line, with each rule following this f
 <metric> <operator> <value> : <rule name/label>
 ```
 
-The delimeter can be updated, please see options below.
+The delimiter can be updated, please see "Options" below.
 
 Where:
 
@@ -232,11 +232,11 @@ When this option is set you'll need to provide this key value, when accessing th
 
 #### `-ruledelimiter`
 
-The delimeter to use when parsing rules. Use this if you have metrics that have : within them.
+The delimiter to use when parsing rules. Use this if you have metrics that have : within them.
 
 ```bash
 # Example of using ~ as the rule delimeter instead of :
-wirestat -ruledelimeter "~"
+wirestat -ruledelimiter "~"
 ```
 
 #### `systemd`
