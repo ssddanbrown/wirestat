@@ -136,6 +136,8 @@ The rules file should contain one rule per line, with each rule following this f
 <metric> <operator> <value> : <rule name/label>
 ```
 
+The delimeter can be updated, please see options below.
+
 Where:
 
 - **metric**: Is the full property name of the metric you want to check against.
