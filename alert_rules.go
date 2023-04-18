@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"regexp"
 )
 
 // Rule string format: cpu.all > 50 : CPU
@@ -47,13 +48,20 @@ func parseRuleFile(filePath string, ruleDelim string) ([]*AlertRule, error) {
 	return rules, nil
 }
 
-func parseRuleString(ruleStr string, ruleDelim string) (*AlertRule, error) {
-	ruleNameSplit := strings.Split(strings.TrimSpace(ruleStr), ruleDelim)
-	ruleLogic := strings.TrimSpace(ruleNameSplit[0])
+func parseRuleString(ruleStr string) (*AlertRule, error) {
+	// Regex that uses negative lookback to escape colons with backslash
+	splitRegex := regexp.MustCompile(`(?<!\\):`)
+
+	// Use the regex above to split, limited to 2 substrings as we shouldn't have more
+	ruleNameSplit := splitRegex.Split(strings.TrimSpace(ruleStr), 2)
+	
+	// Replace occurances of escape in the logic/rule
+	ruleLogic := strings.ReplaceAll(strings.TrimSpace(ruleNameSplit[0]), `\:`, `:`)
 
 	ruleName := ruleLogic
 	if len(ruleNameSplit) > 1 {
-		ruleName = strings.TrimSpace(ruleNameSplit[1])
+		// Replace occurances of escape in the name
+		ruleName = strings.ReplaceAll(strings.TrimSpace(ruleNameSplit[1]), `\:`, `:`)
 	}
 
 	logicSplit := strings.Split(ruleLogic, " ")

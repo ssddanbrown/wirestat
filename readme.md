@@ -147,6 +147,8 @@ Where:
 
 Blanks lines, and lines starting with a `#`, will be ignored.
 
+Colon (:) can be escaped in strings with backslash (\\)
+
 **The rule should be true in the scenario you want to alert upon.**
 
 #### Rule File Example
