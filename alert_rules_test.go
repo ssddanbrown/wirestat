@@ -14,6 +14,13 @@ func TestParseRuleString(t *testing.T) {
 	assert.Equal(t, rule.Property, "cpu.all")
 	assert.EqualValues(t, rule.Value, 50)
 
+	rule, err = parseRuleString(`filesystem.nfs.local.server\:/nfs/path.used_percent < 1 : NFS not mounted`)
+	assert.NoError(t, err)
+	assert.Equal(t, rule.name, "NFS not mounted")
+	assert.Equal(t, rule.Operator, "<")
+	assert.Equal(t, rule.Property, "filesystem.nfs.local.server:/nfs/path.used_percent")
+	assert.EqualValues(t, rule.Value, 1)
+
 	// Missing name resolves to rule
 	rule, err = parseRuleString("cpu.all >= 50")
 	assert.NoError(t, err)
