@@ -136,8 +136,6 @@ The rules file should contain one rule per line, with each rule following this f
 <metric> <operator> <value> : <rule name/label>
 ```
 
-The delimiter can be updated, please see "Options" below.
-
 Where:
 
 - **metric**: Is the full property name of the metric you want to check against.
@@ -231,15 +229,6 @@ When this option is set you'll need to provide this key value, when accessing th
 
 - A `key` query parameter value in the URL.
 - A `X-Access-Key` header value.
-
-#### `-ruledelimiter`
-
-The delimiter to use when parsing rules. Use this if you have metrics that have : within them.
-
-```bash
-# Example of using ~ as the rule delimeter instead of :
-wirestat -ruledelimiter "~"
-```
 
 #### `systemd`
 
