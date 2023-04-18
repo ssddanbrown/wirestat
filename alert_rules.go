@@ -50,7 +50,7 @@ func parseRuleFile(filePath string) ([]*AlertRule, error) {
 func parseRuleString(ruleStr string) (*AlertRule, error) {
 	// Replace escaped colons with the "magic string"
 	magicString := `~~~|~~~`
-	ruleStrEscapeMod := strings.ReplaceAll(ruleStr, , `\:`, magicString)
+	ruleStrEscapeMod := strings.ReplaceAll(ruleStr, `\:`, magicString)
 
 	// Split as before on :
 	ruleNameSplit := strings.Split(strings.TrimSpace(ruleStrEscapeMod), ":")
