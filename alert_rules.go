@@ -18,7 +18,7 @@ type AlertRule struct {
 	name     string
 }
 
-func parseRuleFile(filePath string, ruleDelim string) ([]*AlertRule, error) {
+func parseRuleFile(filePath string) ([]*AlertRule, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("could not open alert rule file [%s], recieved error: %s", filePath, err)
@@ -33,7 +33,7 @@ func parseRuleFile(filePath string, ruleDelim string) ([]*AlertRule, error) {
 			continue
 		}
 
-		rule, err := parseRuleString(line, ruleDelim)
+		rule, err := parseRuleString(line)
 		if err != nil {
 			return nil, fmt.Errorf("error parsing rule file, %s", err)
 		}
@@ -66,7 +66,7 @@ func parseRuleString(ruleStr string) (*AlertRule, error) {
 
 	logicSplit := strings.Split(ruleLogic, " ")
 	if len(logicSplit) != 3 {
-		return nil, fmt.Errorf(`rule "%s" does not adhere to the format "<property> <operator> <value> %s <name>"`, ruleStr, ruleDelim)
+		return nil, fmt.Errorf(`rule "%s" does not adhere to the format "<property> <operator> <value> : <name>"`, ruleStr)
 	}
 
 	validOperators := []string{">", "<", "=", "!=", "<=", ">="}
