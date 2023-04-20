@@ -65,8 +65,8 @@ A typical JSON response from the application, with active rules and alerts, look
 
 This application has been thrown together, primarily for my own use, with little serious experience of golang, and likely contains bugs. For some stats, such as disk info, command output is read (`df command`) and parsed. It has been tested on the following systems:
 
-- Ubuntu 20.04 (x86_64)
-- Fedora 36 (x86_64)
+- Ubuntu 20.04/22.04 (x86_64)
+- Fedora 36/37/38 (x86_64)
 
 Only Linux x86_64 systems are supported at this time. 
 I would be willing to support other linux architectures, upon request & PR & testing from others, but not other operating systems (Windows, MacOS) nor any other init systems or installation setups.
