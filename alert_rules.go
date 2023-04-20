@@ -48,20 +48,16 @@ func parseRuleFile(filePath string) ([]*AlertRule, error) {
 }
 
 func parseRuleString(ruleStr string) (*AlertRule, error) {
-	// Replace escaped colons with the "magic string"
-	magicString := `~~~|~~~`
-	ruleStrEscapeMod := strings.ReplaceAll(ruleStr, `\:`, magicString)
-
-	// Split as before on :
+	// A placeholder is used here to track escaped colons, which are then restored
+	// when the logic and name are parsed out.
+	placeholder := "~~~|~~~"
+	ruleStrEscapeMod := strings.ReplaceAll(ruleStr, `\:`, placeholder)
 	ruleNameSplit := strings.Split(strings.TrimSpace(ruleStrEscapeMod), ":")
-	
-	// Replace occurances of "magic string" in the logic/rule
-	ruleLogic := strings.ReplaceAll(strings.TrimSpace(ruleNameSplit[0]), magicString, `:`)
+	ruleLogic := strings.ReplaceAll(strings.TrimSpace(ruleNameSplit[0]), placeholder, ":")
 
 	ruleName := ruleLogic
 	if len(ruleNameSplit) > 1 {
-		// Replace occurances of "magic string" in the name
-		ruleName = strings.ReplaceAll(strings.TrimSpace(ruleNameSplit[1]), magicString, `:`)
+		ruleName = strings.ReplaceAll(strings.TrimSpace(ruleNameSplit[1]), placeholder, ":")
 	}
 
 	logicSplit := strings.Split(ruleLogic, " ")

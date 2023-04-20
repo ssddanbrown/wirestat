@@ -7,7 +7,6 @@ import (
 
 func TestParseRuleString(t *testing.T) {
 	// Valid rule
-
 	rule, err := parseRuleString("cpu.all >= 50 : CPU should not go over 50%")
 	assert.NoError(t, err)
 	assert.Equal(t, rule.name, "CPU should not go over 50%")
@@ -15,10 +14,10 @@ func TestParseRuleString(t *testing.T) {
 	assert.Equal(t, rule.Property, "cpu.all")
 	assert.EqualValues(t, rule.Value, 50)
 
-	// Valid rule with escape character
-	rule, err = parseRuleString(`filesystem.nfs.local.server\:/nfs/path.used_percent < 1 : NFS not mounted`)
+	// Valid rule with escaped colons
+	rule, err = parseRuleString(`filesystem.nfs.local.server\:/nfs/path.used_percent < 1 : NFS\:not\:mounted`)
 	assert.NoError(t, err)
-	assert.Equal(t, rule.name, "NFS not mounted")
+	assert.Equal(t, rule.name, "NFS:not:mounted")
 	assert.Equal(t, rule.Operator, "<")
 	assert.Equal(t, rule.Property, "filesystem.nfs.local.server:/nfs/path.used_percent")
 	assert.EqualValues(t, rule.Value, 1)

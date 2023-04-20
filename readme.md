@@ -140,12 +140,12 @@ Where:
 
 - **metric**: Is the full property name of the metric you want to check against.
 - **operator**: One of: `>`, `<`, `=`, `!=`, `<=`, `>=`.
-- **value**: The numeric value you want compare the metric against against.
+- **value**: The numeric value you want compare the metric against.
 - **rule name/label**: A unique human friendly label to describe the rule.
 
 Blanks lines, and lines starting with a `#`, will be ignored.
 
-Colon (:) can be escaped in strings with backslash (\\)
+Colons (`:`) can be escaped in strings with backslash (`\\`).
 
 **The rule should be true in the scenario you want to alert upon.**
 
